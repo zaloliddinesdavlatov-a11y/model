@@ -1,0 +1,11 @@
+<html>
+<head>
+    <title>Kitoblar</title>
+</head>
+<body>
+    <h2 style="text-align: center; border: 2px solid red">Bazadagi barcha kitoblar</h2>
+    {% for kitob in all_books %}
+    {{kitob.id}}<b> {{ kitob.title}} </b> <br>
+    {% endfor %}
+</body>
+</html>
