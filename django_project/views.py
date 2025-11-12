@@ -28,3 +28,11 @@ def akademiya(request):
     return HttpResponse("O'zbekiston Respublikasi Surhandaryo viloyati Termez shahri Joylinks academiya")
 
 
+def kitob_detail(request, id):
+    book = BookModel.objects.get(id=id)
+    context = {
+        'book':book
+    }
+    return render(request, 'kitob_detail.html', context)
+
+
