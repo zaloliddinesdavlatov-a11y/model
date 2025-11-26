@@ -1,14 +1,15 @@
 from django.urls import path
-from . import views
-from .views import kitob_detail
+from .views import BookDetailApiView,BookMixedApiView,BookListApiView,BookCreateApiView,BookDeleteApiView,BookEditApiView
 
 
-urlpatterns = [
-    path('kitoblar/<int:id>/',kitob_detail),
-    path('kitob/', views.hamma_kitoblar, name='hamma_kitoblar'),
-    path('ber/', views.salom_beruvchi, name='salom_beruvchi'),
-    path('mamlakat/', views.mamlakat, name='mamlakat'),
-    path('mamlakat/viloyat/', views.viloyat, name='viloyat'),
-    path('mamlakat/viloyat/shahar/', views.shahar, name='shahar'),
-    path('mamlakat/viloyat/shahar/akademiya/', views.akademiya, name='akademiya'),
+
+urlpatterns=[
+
+    #######
+    path('book/',BookListApiView.as_view(),name='book'),
+    path('book/create/',BookCreateApiView.as_view(),name='book_create'),
+    path('book/edit/<int:pk>/',BookEditApiView.as_view(),name='edit'),
+    path('book/delete/<int:pk>/',BookDeleteApiView.as_view(),name='book-delete'),
+    path('book/<int:pk>/', BookDetailApiView.as_view(), name='book_detail'),
+    path('book/<int:pk>', BookMixedApiView.as_view(), name='book_mixed'),
 ]

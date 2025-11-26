@@ -1,38 +1,114 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import BookModel
+
+from .models import Book
+from .serializers import BookSerializer
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
-def hamma_kitoblar(request):
-    all_books = BookModel.objects.all()
-    context = {
-        'all_books':all_books
-    }
-    return render(request, 'asosiy_sahifa.html',context)
+#class BookListApiView(generics.ListAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
+class BookListApiView(APIView):
+    def get(self, request):
+        books = Book.objects.all()
+        serializer=BookSerializer(books,many=True)
+        return Response(serializer.data)
+
+#class BookCreateApiView(generics.CreateAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
+class BookCreateApiView(APIView):
+    def post(self,request):
+        try:
+            serializer=BookSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response({"status":"Nimadur xatto ketdi"})
+        except:
+            return Response({"status":"Nimadur xatto ketdi"})
+
+#class BookEditApiView(generics.UpdateAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
+class BookEditApiView(APIView):
+    def put(self,request,pk):
+        books=Book.objects.get(id=pk)
+        serializer=BookSerializer(books,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"xabar":"boldi yangilandi","yangilangani":serializer.data})
+        else:
+            return  Response({"javob":"Edit qilinmadi"})
+
+    def patch(self,request,pk):
+        books=Book.objects.get(id=pk)
+        serializer=BookSerializer(books,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"xabar":"boldi yangilandi","yangilangani":serializer.data})
+        else:
+            return  Response({"javob":"Edit qilinmadi"})
 
 
-def salom_beruvchi(request):
-     return HttpResponse("Assalomu aleykum boy ota")
+#class BookDeleteApiView(generics.DestroyAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
+class BookDeleteApiView(APIView):
+    def delete(self, request,pk):
+        books=Book.objects.get(id=pk)
+        books.delete()
+        return Response({"xabar":"kitob ochirildi"})
 
 
-def mamlakat(request):
-    return HttpResponse("O'zbekiston Respublikasi")
 
-def viloyat(request):
-    return HttpResponse("O'zbekiston Respublikasi Surhandaryo viloyati")
+#class BookDetailApiView(generics.RetrieveAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
+class BookDetailApiView(APIView):
+    def get(self,request,pk):
+        try:
+            books=Book.objects.get(id=pk)
+            serializer=BookSerializer(books)
+            return Response(serializer.data)
+        except:
+            return Response({"xabar":"bunday id-li kitob yuq mavjud emas"})
 
-def shahar(request):
-    return HttpResponse("O'zbekiston Respublikasi Surhandaryo viloyati Termez shahri")
+#class BookMixedApiView(generics.RetrieveUpdateDestroyAPIView):
+#    queryset = Book.objects.all()
+#    serializer_class = BookSerializer
 
-def akademiya(request):
-    return HttpResponse("O'zbekiston Respublikasi Surhandaryo viloyati Termez shahri Joylinks academiya")
+class BookMixedApiView(APIView):
+    def get(self,request,pk):
+        try:
+            books=Book.objects.get(id=pk)
+            serializer=BookSerializer(books)
+            return Response(serializer.data)
+        except:
+            return Response({"xabar":"bunday id-li kitob yuq mavjud emas"})
+
+    def put(self,request,pk):
+        books=Book.objects.get(id=pk)
+        serializer=BookSerializer(books,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"xabar":"boldi yangilandi","yangilangani":serializer.data})
+        else:
+            return  Response({"javob":"Edit qilinmadi"})
+
+    def patch(self,request,pk):
+        books=Book.objects.get(id=pk)
+        serializer=BookSerializer(books,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"xabar":"boldi yangilandi","yangilangani":serializer.data})
+        else:
+            return  Response({"javob":"Edit qilinmadi"})
 
 
-def kitob_detail(request, id):
-    book = BookModel.objects.get(id=id)
-    context = {
-        'book':book
-    }
-    return render(request, 'kitob_detail.html', context)
-
-
+    def delete(self, request, pk):
+        books = Book.objects.get(id=pk)
+        books.delete()
+        return Response({"xabar": "kitob ochirildi"})

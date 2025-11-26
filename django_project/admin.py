@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import BookModel
+from .models import Book
 
 
-admin.site.register(BookModel)
+admin.site.register(Book)
 
